@@ -1,0 +1,6 @@
+@MoodleBackEnd_HostAddress = http://localhost:5181
+
+GET {{MoodleBackEnd_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
