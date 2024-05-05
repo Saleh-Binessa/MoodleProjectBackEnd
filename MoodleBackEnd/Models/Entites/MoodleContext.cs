@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using MoodleBackEnd.Models.Entites.Users;
 
 namespace MoodleBackEnd.Models.Entites
 {

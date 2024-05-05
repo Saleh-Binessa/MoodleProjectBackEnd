@@ -1,4 +1,4 @@
-﻿namespace MoodleBackEnd.Models.Entites
+﻿namespace MoodleBackEnd.Models.Entites.Users
 {
     public class UserAccountEntity
     {

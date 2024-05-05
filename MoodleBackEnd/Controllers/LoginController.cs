@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MoodleBackEnd.Models.Entites;
+using MoodleBackEnd.Models.Entites.Users;
 using MoodleBackEnd.Models.Requests;
 using MoodleBackEnd.Models.Responses;
 using MoodleBackEnd.Models.Services;
