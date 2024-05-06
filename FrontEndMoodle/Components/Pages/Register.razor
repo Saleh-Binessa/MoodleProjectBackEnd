@@ -56,7 +56,7 @@
     private async Task RegisterUser()
     {
         // Send the signup model to the backend API
-        var response = await Http.PostAsJsonAsync("/api/Login/Register", signupModel);
+        var response = await Http.PostAsJsonAsync("https://localhost:7137/api/Login/Register", signupModel);
         if (response.IsSuccessStatusCode)
         {
             // Navigate to the home page if successful

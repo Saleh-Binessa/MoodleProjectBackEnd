@@ -1,23 +1,30 @@
-﻿@page "/signin"
+﻿@page "/sign-in"
 @using System.ComponentModel.DataAnnotations
+@using FrontEndMoodle.Models
 @using MoodleBackEnd.Models.Requests
+@using MoodleBackEnd.Models.Responses
+@using Microsoft.AspNetCore.Components
+@using System.IdentityModel.Tokens.Jwt
+@using MoodleBackEnd.Models.Services
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="form-container p-5 bg-light rounded shadow-lg" style="width: 400px;">
         <h2 class="text-center mb-4">Sign In to Coded Dashboard</h2>
-        <EditForm Model="loginModel" OnValidSubmit="LoginUser">
+        <!-- Ensure FormName is unique -->
+        <EditForm Model="loginModel" OnValidSubmit="LoginUserSubmit" FormName="SignInForm">
             <DataAnnotationsValidator />
+            <ValidationSummary />
 
             <div class="form-group mb-3">
-                <label for="username" class="form-label text-center w-100">Username</label>
+                <label for="username" class="form-label text-center w-100">Username:</label>
                 <InputText id="username" @bind-Value="loginModel.Username" class="form-control" Placeholder="Enter your username" />
                 <ValidationMessage For="@(() => loginModel.Username)" />
             </div>
 
             <div class="form-group mb-3">
-                <label for="password" class="form-label text-center w-100">Password</label>
+                <label for="password" class="form-label text-center w-100">Password:</label>
                 <InputText id="password" @bind-Value="loginModel.Password" class="form-control" Placeholder="Enter your password" Type="password" />
                 <ValidationMessage For="@(() => loginModel.Password)" />
             </div>
@@ -25,7 +32,6 @@
             <button type="submit" class="btn btn-primary w-100">Sign In</button>
         </EditForm>
 
-        <!-- Error message display -->
         @if (!string.IsNullOrWhiteSpace(errorMessage))
         {
             <div class="alert alert-danger mt-2">@errorMessage</div>
@@ -34,23 +40,38 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    private GlobalAppState AppState { get; set; }
+
     private UserLoginRequest loginModel = new UserLoginRequest();
     private string errorMessage = string.Empty;
 
-    private async Task LoginUser()
+    private async Task LoginUserSubmit()
     {
-        // Call your login API
-        var response = await Http.PostAsJsonAsync("/api/Login", loginModel);
+        var response = await Http.PostAsJsonAsync("https://localhost:7137/api/Login", loginModel);
         if (response.IsSuccessStatusCode)
         {
-            Navigation.NavigateTo("/"); // Redirect to the homepage or another appropriate location
+            var token = await response.Content.ReadFromJsonAsync<UserLoginResponse>();
+            if (token != null && !string.IsNullOrWhiteSpace(token.Token))
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jwtSecurityToken = handler.ReadJwtToken(token.Token);
+
+                var username = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == TokenClaimsConstant.Username)?.Value ?? string.Empty;
+                var isAdmin = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value == "Admin";
+
+                AppState.SetAuthData(token.Token, username, isAdmin);
+
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                errorMessage = "Failed to retrieve a valid authentication token. Please try again.";
+            }
         }
         else
         {
-            // Set a user-friendly error message
             errorMessage = "Invalid login credentials. Please try again.";
         }
     }
-
-    
 }
