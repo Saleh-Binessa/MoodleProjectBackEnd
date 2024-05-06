@@ -9,5 +9,8 @@ namespace MoodleBackEnd.Models.Entites
         public string Description { get; set; }
         public List<PhaseEntity> Phases { get; set; }
         public List<StudentEntity> Students { get; set; }
+
+        public CourseEntity() { }
     }
+    
 }

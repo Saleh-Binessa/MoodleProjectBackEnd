@@ -6,7 +6,9 @@
         public string Title { get; set; }
         public string Description { get; set; }
         public DateOnly Date { get; set; }
-        public List<TaskEntity> Tasks { get; set; }
-        
+        public ICollection<MaterialTask> Tasks { get; set; }
+        public ICollection<PhaseMaterial> Phases { get; set; }
+
+        public MaterialEntity() { }
     }
 }
