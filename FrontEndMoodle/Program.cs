@@ -1,4 +1,5 @@
 using FrontEndMoodle.Components;
+using FrontEndMoodle.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,10 @@ builder.Services.AddRazorComponents()
 builder.Services.AddHttpClient();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddCascadingValue<GlobalAppState>(_ => new GlobalAppState());
+builder.Services.AddSingleton<GlobalAppState>(); // Register the state as a singleton
+
+
 
 var app = builder.Build();
 
