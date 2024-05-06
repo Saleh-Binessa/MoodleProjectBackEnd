@@ -9,6 +9,11 @@
         public string Password { get; private set; }
         public UserAccountType AccountType { get; set; }
 
+
+        public StudentEntity Student { get; set; }
+        public InstructorEntity Instructor { get; set; }
+        public AdminEntity Admin { get; set; }
+
         private UserAccountEntity()
         {
 

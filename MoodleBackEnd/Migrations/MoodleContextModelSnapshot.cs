@@ -34,11 +34,16 @@ namespace MoodleBackEnd.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("InstructorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("InstructorId");
 
                     b.ToTable("Courses");
                 });
@@ -80,28 +85,18 @@ namespace MoodleBackEnd.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PhaseId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PhaseId");
+
                     b.ToTable("Materials");
-                });
-
-            modelBuilder.Entity("MoodleBackEnd.Models.Entites.MaterialTask", b =>
-                {
-                    b.Property<int>("MaterialId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MaterialId", "TaskId");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("MaterialTask");
                 });
 
             modelBuilder.Entity("MoodleBackEnd.Models.Entites.PhaseEntity", b =>
@@ -130,19 +125,19 @@ namespace MoodleBackEnd.Migrations
                     b.ToTable("Phases");
                 });
 
-            modelBuilder.Entity("MoodleBackEnd.Models.Entites.PhaseMaterial", b =>
+            modelBuilder.Entity("MoodleBackEnd.Models.Entites.StudentCourse", b =>
                 {
-                    b.Property<int>("PhaseId")
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MaterialId")
+                    b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.HasKey("PhaseId", "MaterialId");
+                    b.HasKey("StudentId", "CourseId");
 
-                    b.HasIndex("MaterialId");
+                    b.HasIndex("CourseId");
 
-                    b.ToTable("PhaseMaterial");
+                    b.ToTable("StudentCourse");
                 });
 
             modelBuilder.Entity("MoodleBackEnd.Models.Entites.SubmissionEntity", b =>
@@ -180,16 +175,45 @@ namespace MoodleBackEnd.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubmissionId")
+                    b.HasKey("Id");
+
+                    b.HasIndex("MaterialId");
+
+                    b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("MoodleBackEnd.Models.Entites.Users.AdminEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserAccountId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tasks");
+                    b.HasIndex("UserAccountId")
+                        .IsUnique();
+
+                    b.ToTable("AdminEntity");
                 });
 
             modelBuilder.Entity("MoodleBackEnd.Models.Entites.Users.InstructorEntity", b =>
@@ -208,7 +232,13 @@ namespace MoodleBackEnd.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserAccountId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserAccountId")
+                        .IsUnique();
 
                     b.ToTable("Instructors");
                 });
@@ -221,12 +251,6 @@ namespace MoodleBackEnd.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -235,11 +259,13 @@ namespace MoodleBackEnd.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserAccountId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("CourseId");
+                    b.HasIndex("UserAccountId")
+                        .IsUnique();
 
                     b.ToTable("Students");
                 });
@@ -276,6 +302,17 @@ namespace MoodleBackEnd.Migrations
                     b.ToTable("UserAccounts");
                 });
 
+            modelBuilder.Entity("MoodleBackEnd.Models.Entites.CourseEntity", b =>
+                {
+                    b.HasOne("MoodleBackEnd.Models.Entites.Users.InstructorEntity", "Instructor")
+                        .WithMany("Courses")
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Instructor");
+                });
+
             modelBuilder.Entity("MoodleBackEnd.Models.Entites.GradeEntity", b =>
                 {
                     b.HasOne("MoodleBackEnd.Models.Entites.SubmissionEntity", "Submission")
@@ -287,23 +324,15 @@ namespace MoodleBackEnd.Migrations
                     b.Navigation("Submission");
                 });
 
-            modelBuilder.Entity("MoodleBackEnd.Models.Entites.MaterialTask", b =>
+            modelBuilder.Entity("MoodleBackEnd.Models.Entites.MaterialEntity", b =>
                 {
-                    b.HasOne("MoodleBackEnd.Models.Entites.MaterialEntity", "Material")
-                        .WithMany("Tasks")
-                        .HasForeignKey("MaterialId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MoodleBackEnd.Models.Entites.TaskEntity", "Task")
+                    b.HasOne("MoodleBackEnd.Models.Entites.PhaseEntity", "Phase")
                         .WithMany("Materials")
-                        .HasForeignKey("TaskId")
+                        .HasForeignKey("PhaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Material");
-
-                    b.Navigation("Task");
+                    b.Navigation("Phase");
                 });
 
             modelBuilder.Entity("MoodleBackEnd.Models.Entites.PhaseEntity", b =>
@@ -317,23 +346,23 @@ namespace MoodleBackEnd.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("MoodleBackEnd.Models.Entites.PhaseMaterial", b =>
+            modelBuilder.Entity("MoodleBackEnd.Models.Entites.StudentCourse", b =>
                 {
-                    b.HasOne("MoodleBackEnd.Models.Entites.MaterialEntity", "Material")
-                        .WithMany("Phases")
-                        .HasForeignKey("MaterialId")
+                    b.HasOne("MoodleBackEnd.Models.Entites.CourseEntity", "Course")
+                        .WithMany("Students")
+                        .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MoodleBackEnd.Models.Entites.PhaseEntity", "Phase")
-                        .WithMany("Materials")
-                        .HasForeignKey("PhaseId")
+                    b.HasOne("MoodleBackEnd.Models.Entites.Users.StudentEntity", "Student")
+                        .WithMany("Courses")
+                        .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Material");
+                    b.Navigation("Course");
 
-                    b.Navigation("Phase");
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("MoodleBackEnd.Models.Entites.SubmissionEntity", b =>
@@ -347,23 +376,48 @@ namespace MoodleBackEnd.Migrations
                     b.Navigation("Task");
                 });
 
-            modelBuilder.Entity("MoodleBackEnd.Models.Entites.Users.StudentEntity", b =>
+            modelBuilder.Entity("MoodleBackEnd.Models.Entites.TaskEntity", b =>
                 {
-                    b.HasOne("MoodleBackEnd.Models.Entites.Users.UserAccountEntity", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
+                    b.HasOne("MoodleBackEnd.Models.Entites.MaterialEntity", "Material")
+                        .WithMany("Tasks")
+                        .HasForeignKey("MaterialId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MoodleBackEnd.Models.Entites.CourseEntity", "Course")
-                        .WithMany("Students")
-                        .HasForeignKey("CourseId")
+                    b.Navigation("Material");
+                });
+
+            modelBuilder.Entity("MoodleBackEnd.Models.Entites.Users.AdminEntity", b =>
+                {
+                    b.HasOne("MoodleBackEnd.Models.Entites.Users.UserAccountEntity", "Account")
+                        .WithOne("Admin")
+                        .HasForeignKey("MoodleBackEnd.Models.Entites.Users.AdminEntity", "UserAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Account");
+                });
 
-                    b.Navigation("Course");
+            modelBuilder.Entity("MoodleBackEnd.Models.Entites.Users.InstructorEntity", b =>
+                {
+                    b.HasOne("MoodleBackEnd.Models.Entites.Users.UserAccountEntity", "Account")
+                        .WithOne("Instructor")
+                        .HasForeignKey("MoodleBackEnd.Models.Entites.Users.InstructorEntity", "UserAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("MoodleBackEnd.Models.Entites.Users.StudentEntity", b =>
+                {
+                    b.HasOne("MoodleBackEnd.Models.Entites.Users.UserAccountEntity", "Account")
+                        .WithOne("Student")
+                        .HasForeignKey("MoodleBackEnd.Models.Entites.Users.StudentEntity", "UserAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("MoodleBackEnd.Models.Entites.CourseEntity", b =>
@@ -375,8 +429,6 @@ namespace MoodleBackEnd.Migrations
 
             modelBuilder.Entity("MoodleBackEnd.Models.Entites.MaterialEntity", b =>
                 {
-                    b.Navigation("Phases");
-
                     b.Navigation("Tasks");
                 });
 
@@ -393,9 +445,29 @@ namespace MoodleBackEnd.Migrations
 
             modelBuilder.Entity("MoodleBackEnd.Models.Entites.TaskEntity", b =>
                 {
-                    b.Navigation("Materials");
-
                     b.Navigation("Submission")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MoodleBackEnd.Models.Entites.Users.InstructorEntity", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("MoodleBackEnd.Models.Entites.Users.StudentEntity", b =>
+                {
+                    b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("MoodleBackEnd.Models.Entites.Users.UserAccountEntity", b =>
+                {
+                    b.Navigation("Admin")
+                        .IsRequired();
+
+                    b.Navigation("Instructor")
+                        .IsRequired();
+
+                    b.Navigation("Student")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

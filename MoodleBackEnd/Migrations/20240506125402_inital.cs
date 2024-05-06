@@ -12,64 +12,6 @@ namespace MoodleBackEnd.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Courses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Courses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Instructors",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Instructors", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Materials",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Date = table.Column<DateOnly>(type: "date", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Materials", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tasks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SubmissionId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tasks", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserAccounts",
                 columns: table => new
                 {
@@ -79,11 +21,95 @@ namespace MoodleBackEnd.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsAdmin = table.Column<bool>(type: "bit", nullable: false)
+                    AccountType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserAccounts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdminEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserAccountId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdminEntity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AdminEntity_UserAccounts_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalTable: "UserAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Instructors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserAccountId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Instructors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Instructors_UserAccounts_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalTable: "UserAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Students",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserAccountId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Students", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Students_UserAccounts_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalTable: "UserAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Courses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InstructorId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Courses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Courses_Instructors_InstructorId",
+                        column: x => x.InstructorId,
+                        principalTable: "Instructors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -108,25 +134,68 @@ namespace MoodleBackEnd.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MaterialTask",
+                name: "StudentCourse",
                 columns: table => new
                 {
-                    MaterialId = table.Column<int>(type: "int", nullable: false),
-                    TaskId = table.Column<int>(type: "int", nullable: false)
+                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    CourseId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MaterialTask", x => new { x.MaterialId, x.TaskId });
+                    table.PrimaryKey("PK_StudentCourse", x => new { x.StudentId, x.CourseId });
                     table.ForeignKey(
-                        name: "FK_MaterialTask_Materials_MaterialId",
-                        column: x => x.MaterialId,
-                        principalTable: "Materials",
+                        name: "FK_StudentCourse_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MaterialTask_Tasks_TaskId",
-                        column: x => x.TaskId,
-                        principalTable: "Tasks",
+                        name: "FK_StudentCourse_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Materials",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    PhaseId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Materials", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Materials_Phases_PhaseId",
+                        column: x => x.PhaseId,
+                        principalTable: "Phases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tasks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaterialId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tasks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tasks_Materials_MaterialId",
+                        column: x => x.MaterialId,
+                        principalTable: "Materials",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -152,58 +221,6 @@ namespace MoodleBackEnd.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Students",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
-                    CourseId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Students", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Students_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Students_UserAccounts_AccountId",
-                        column: x => x.AccountId,
-                        principalTable: "UserAccounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PhaseMaterial",
-                columns: table => new
-                {
-                    PhaseId = table.Column<int>(type: "int", nullable: false),
-                    MaterialId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PhaseMaterial", x => new { x.PhaseId, x.MaterialId });
-                    table.ForeignKey(
-                        name: "FK_PhaseMaterial_Materials_MaterialId",
-                        column: x => x.MaterialId,
-                        principalTable: "Materials",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PhaseMaterial_Phases_PhaseId",
-                        column: x => x.PhaseId,
-                        principalTable: "Phases",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "GradeEntity",
                 columns: table => new
                 {
@@ -224,20 +241,32 @@ namespace MoodleBackEnd.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AdminEntity_UserAccountId",
+                table: "AdminEntity",
+                column: "UserAccountId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Courses_InstructorId",
+                table: "Courses",
+                column: "InstructorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GradeEntity_SubmissionId",
                 table: "GradeEntity",
                 column: "SubmissionId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_MaterialTask_TaskId",
-                table: "MaterialTask",
-                column: "TaskId");
+                name: "IX_Instructors_UserAccountId",
+                table: "Instructors",
+                column: "UserAccountId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PhaseMaterial_MaterialId",
-                table: "PhaseMaterial",
-                column: "MaterialId");
+                name: "IX_Materials_PhaseId",
+                table: "Materials",
+                column: "PhaseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Phases_CourseId",
@@ -245,42 +274,48 @@ namespace MoodleBackEnd.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_AccountId",
-                table: "Students",
-                column: "AccountId");
+                name: "IX_StudentCourse_CourseId",
+                table: "StudentCourse",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_CourseId",
+                name: "IX_Students_UserAccountId",
                 table: "Students",
-                column: "CourseId");
+                column: "UserAccountId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubmissionEntity_TaskId",
                 table: "SubmissionEntity",
                 column: "TaskId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_MaterialId",
+                table: "Tasks",
+                column: "MaterialId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AdminEntity");
+
+            migrationBuilder.DropTable(
                 name: "GradeEntity");
 
             migrationBuilder.DropTable(
-                name: "Instructors");
+                name: "StudentCourse");
 
             migrationBuilder.DropTable(
-                name: "MaterialTask");
-
-            migrationBuilder.DropTable(
-                name: "PhaseMaterial");
+                name: "SubmissionEntity");
 
             migrationBuilder.DropTable(
                 name: "Students");
 
             migrationBuilder.DropTable(
-                name: "SubmissionEntity");
+                name: "Tasks");
 
             migrationBuilder.DropTable(
                 name: "Materials");
@@ -289,13 +324,13 @@ namespace MoodleBackEnd.Migrations
                 name: "Phases");
 
             migrationBuilder.DropTable(
-                name: "UserAccounts");
-
-            migrationBuilder.DropTable(
-                name: "Tasks");
-
-            migrationBuilder.DropTable(
                 name: "Courses");
+
+            migrationBuilder.DropTable(
+                name: "Instructors");
+
+            migrationBuilder.DropTable(
+                name: "UserAccounts");
         }
     }
 }
