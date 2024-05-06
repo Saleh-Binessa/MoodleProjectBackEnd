@@ -1,4 +1,5 @@
 using FrontEndMoodle.Components;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddHttpClient();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddSingleton<TodoService>();
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 
