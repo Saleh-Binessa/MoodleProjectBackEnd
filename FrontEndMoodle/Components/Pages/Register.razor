@@ -3,12 +3,15 @@
 @inject NavigationManager Navigation
 @using System.ComponentModel.DataAnnotations
 @using MoodleBackEnd.Models.Requests
+@using MoodleBackEnd.Models.Entites.Users
+@using MoodleBackEnd.Models.Requests
 
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="form-container p-5 bg-light rounded shadow-lg" style="width: 400px;">
         <h2 class="text-center mb-4">Register for Coded Dashboard</h2>
         <EditForm Model="signupModel" OnValidSubmit="RegisterUser">
             <DataAnnotationsValidator />
+
             <div class="form-group mb-3">
                 <label for="name" class="form-label text-center w-100">Name</label>
                 <InputText id="name" @bind-Value="signupModel.Name" class="form-control" Placeholder="Enter your name" />
@@ -33,9 +36,15 @@
                 <ValidationMessage For="@(() => signupModel.Password)" />
             </div>
 
-            <div class="form-group mb-3 d-flex justify-content-center">
-                <label for="isAdmin" class="form-label me-2">Register As Instructor?</label>
-                <InputCheckbox id="isAdmin" @bind-Value="signupModel.IsAdmin" class="form-check-input" />
+            <div class="form-group mb-3">
+                <label for="accountType" class="form-label text-center w-100">Account Type</label>
+                <select id="accountType" @bind="signupModel.AccountType" class="form-select">
+                    <option value="Admin">Admin</option>
+                    <option value="Instructor">Instructor</option>
+                    <option value="Student">Student</option>
+                </select>
+                <ValidationMessage For="@(() => signupModel.AccountType)" />
+
             </div>
 
             @if (!string.IsNullOrWhiteSpace(errorMessage))
@@ -49,25 +58,23 @@
 </div>
 
 @code {
-    private string errorMessage = string.Empty; // To hold error messages
+    private string errorMessage = string.Empty;
 
     private SignupRequest signupModel = new SignupRequest();
 
     private async Task RegisterUser()
     {
-        // Send the signup model to the backend API
         var response = await Http.PostAsJsonAsync("https://localhost:7137/api/Login/Register", signupModel);
         if (response.IsSuccessStatusCode)
         {
-            // Navigate to the home page if successful
             Navigation.NavigateTo("/");
         }
         else
         {
-            // Handle registration error
             errorMessage = $"Registration failed: {response.StatusCode} - {response.ReasonPhrase}";
         }
     }
 
-
+    
 }
+

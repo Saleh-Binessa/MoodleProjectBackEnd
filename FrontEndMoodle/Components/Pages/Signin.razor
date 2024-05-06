@@ -1,11 +1,11 @@
-﻿@page "/sign-in"
+﻿@page "/signin"
 @using System.ComponentModel.DataAnnotations
-@using FrontEndMoodle.Models
 @using MoodleBackEnd.Models.Requests
 @using MoodleBackEnd.Models.Responses
 @using Microsoft.AspNetCore.Components
 @using System.IdentityModel.Tokens.Jwt
 @using MoodleBackEnd.Models.Services
+@using System.Security.Claims
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
@@ -58,9 +58,10 @@
                 var jwtSecurityToken = handler.ReadJwtToken(token.Token);
 
                 var username = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == TokenClaimsConstant.Username)?.Value ?? string.Empty;
-                var isAdmin = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value == "Admin";
+                var userId = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == TokenClaimsConstant.UserId)?.Value ?? string.Empty;
+                var userRole = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin";
 
-                AppState.SetAuthData(token.Token, username, isAdmin);
+                AppState.SetAuthData(token.Token, username, userId, userRole);
 
                 Navigation.NavigateTo("/");
             }

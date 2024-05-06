@@ -1,5 +1,4 @@
 using FrontEndMoodle.Components;
-using FrontEndMoodle.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 

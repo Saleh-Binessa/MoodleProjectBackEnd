@@ -1,7 +1,25 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Components
+
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Welcome to the Coded Dashboard</h1>
 
-Welcome to your new app.
+@if (!string.IsNullOrWhiteSpace(AppState.Username))
+{
+    <h3>Hello, @AppState.Username!</h3>
+    <ul>
+        <li><strong>User ID:</strong> @AppState.UserId</li>
+        <li><strong>Role:</strong> @(AppState.IsAdmin ? "Admin" : "User")</li>
+    </ul>
+}
+else
+{
+    <h3>Welcome, guest! Please sign in to access your dashboard.</h3>
+}
+
+@code {
+    [CascadingParameter]
+    private GlobalAppState AppState { get; set; }
+}
