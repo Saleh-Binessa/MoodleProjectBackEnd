@@ -42,7 +42,7 @@ namespace MoodleBackEnd.Controllers
             //{
             //    isAdmin = true;
             //}
-            var newUser = UserAccountEntity.Create(request.Username, request.Password, request.IsAdmin);
+            var newUser = UserAccountEntity.Create(request.Username, request.Password, request.AccountType);
             newUser.Name = request.Name;
             newUser.Email = request.Email;
             _context.UserAccounts.Add(newUser);

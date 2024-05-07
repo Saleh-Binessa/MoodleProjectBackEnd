@@ -1,16 +1,30 @@
 using FrontEndMoodle.Components;
+
 using MudBlazor.Services;
+=======
+using Syncfusion.Blazor;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddSyncfusionBlazor();
+
 builder.Services.AddHttpClient();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
 builder.Services.AddSingleton<TodoService>();
 builder.Services.AddMudServices();
+=======
+builder.Services.AddCascadingValue<GlobalAppState>(_ => new GlobalAppState());
+builder.Services.AddSingleton<GlobalAppState>(); // Register the state as a singleton
+
+
+
 
 var app = builder.Build();
 

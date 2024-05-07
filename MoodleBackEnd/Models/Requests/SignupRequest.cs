@@ -1,4 +1,6 @@
-﻿namespace MoodleBackEnd.Models.Requests
+﻿using MoodleBackEnd.Models.Entites.Users;
+
+namespace MoodleBackEnd.Models.Requests
 {
     public class SignupRequest
     {
@@ -6,6 +8,6 @@
         public string Email { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public bool IsAdmin { get; set; }
+        public UserAccountType AccountType { get; set; }
     }
 }
