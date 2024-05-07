@@ -1,0 +1,220 @@
+﻿@page "/Tasks"
+
+
+@code {
+    private string taskName { get; set; } = "C# Basics";
+    private string taskDetail1 { get; set; } = "Task Detail 1";
+    private string taskDetail2 { get; set; } = "Task Detail 2";
+    private string taskDetail3 { get; set; } = "Task Detail 3";
+    private string taskDetail4 { get; set; } = "Task Detail 4";
+    private string taskDetail5 { get; set; } = "Task Detail 5";
+    private string bonus { get; set; } = "Bonus Detail";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-pQKJ0ftqHLhc6+Ks54e5twhcnHF2MLBeZ2yzDcZaVYCKH2Xykm1ZMI2+ZhJf+Yw1WXLO8wMRG9G2V5fLiZByFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .icon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 24px;
+            color: #007bff;
+            margin: 10px; /* Add margin for better spacing */
+        }
+
+        .yellow-container {
+            background-color: #ffffcc; /* Yellowish background color */
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section-content {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .text {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .list-item {
+            margin-bottom: 5px;
+        }
+
+        .timer-container {
+            text-align: center; /* Center the timer */
+        }
+
+        .timer {
+            font-size: 18px;
+            color: #777;
+            display: inline-block;
+        }
+
+        .button {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 8px 16px;
+            cursor: pointer;
+            color: #fff;
+            background-color: #007bff; /* Blue color for buttons */
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+            .button:hover {
+                background-color: #0056b3; /* Darker shade of blue on hover */
+            }
+
+        .clear-button {
+            background-color: #dc3545; /* Red color for clear button */
+        }
+
+            .clear-button:hover {
+                background-color: #c82333; /* Darker shade of red on hover */
+            }
+
+        .footer {
+            font-size: 12px;
+            text-align: center;
+            color: #777;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <i class="icon fas fa-star"></i>
+        <div class="header">@taskName</div>
+
+        <div class="section">
+            <div class="section-content">
+                <div class="text">Task Details: </div>
+                <div class="text">Task time: 20 minutes</div>
+                <div class="text">Start your timer and start working!</div>
+                <form class="timer-container" onsubmit="return false;">
+                    <div class="timer" id="timer">00:00:00</div>
+                    <button type="button" class="button" id="playButton">Play</button>
+                    <button type="reset" class="button clear-button" id="clearButton">Clear</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-content">
+                <div class="text">@taskDetail1</div>
+                <div class="text">@taskDetail2</div>
+                <div class="text">@taskDetail3</div>
+                <div class="text">@taskDetail4</div>
+                <div class="text">@taskDetail5</div>
+            </div>
+        </div>
+
+        <div class="yellow-container">
+            <div class="header">Bonus</div>
+            <p>@bonus</p>
+        </div>
+
+        <div class="footer">Created by Coded</div>
+    </div>
+
+    <script>
+        let timerInterval;
+        let timerRunning = false;
+        let timerValue = 0;
+
+        function startTimer() {
+            if (!timerRunning) {
+                timerInterval = setInterval(updateTimer, 1000);
+                timerRunning = true;
+            }
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+        }
+
+        function updateTimer() {
+            timerValue++;
+            let hours = Math.floor(timerValue / 3600);
+            let minutes = Math.floor((timerValue % 3600) / 60);
+            let seconds = timerValue % 60;
+            document.getElementById("timer").innerText = formatTime(hours) + ":" + formatTime(minutes) + ":" + formatTime(seconds);
+        }
+
+        function formatTime(time) {
+            return time < 10 ? "0" + time : time;
+        }
+
+        document.getElementById("playButton").addEventListener("click", function () {
+            if (timerRunning) {
+                pauseTimer();
+                this.innerText = "Play";
+            } else {
+                startTimer();
+                this.innerText = "Pause";
+            }
+        });
+
+        document.getElementById("clearButton").addEventListener("click", function () {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timerValue = 0;
+            document.getElementById("timer").innerText = "00:00:00";
+            document.getElementById("playButton").innerText = "Play";
+        });
+    </script>
+</body>
+</html>
+

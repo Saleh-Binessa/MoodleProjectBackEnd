@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoodleBackEnd", "MoodleBackEnd\MoodleBackEnd.csproj", "{2CD1E8EE-A118-4A12-A034-1FEBAC73F182}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontEndMoodle", "FrontEndMoodle\FrontEndMoodle.csproj", "{EA93ED9A-2F08-4243-A367-59E535EED599}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrontEndMoodle", "FrontEndMoodle\FrontEndMoodle.csproj", "{EA93ED9A-2F08-4243-A367-59E535EED599}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
