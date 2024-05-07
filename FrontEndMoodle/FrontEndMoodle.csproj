@@ -9,7 +9,6 @@
   <ItemGroup>
 
     <PackageReference Include="MudBlazor" Version="6.19.1" />
-=======
 
     <PackageReference Include="Blazorise" Version="1.5.2" />
     <PackageReference Include="Blazorise.Bootstrap" Version="1.5.2" />
