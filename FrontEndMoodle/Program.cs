@@ -1,7 +1,7 @@
 using FrontEndMoodle.Components;
 
 using MudBlazor.Services;
-=======
+
 using Syncfusion.Blazor;
 
 
@@ -19,7 +19,7 @@ builder.Services.AddServerSideBlazor();
 
 builder.Services.AddSingleton<TodoService>();
 builder.Services.AddMudServices();
-=======
+
 builder.Services.AddCascadingValue<GlobalAppState>(_ => new GlobalAppState());
 builder.Services.AddSingleton<GlobalAppState>(); // Register the state as a singleton
 

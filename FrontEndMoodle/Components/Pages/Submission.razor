@@ -1,0 +1,53 @@
+﻿@page "/Submission"
+
+<PageTitle>Submission</PageTitle>
+
+<h3>Task Submission</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Task Name</th>
+            <th>Submission Link</th>
+            <th>Grade</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Tasks)
+        {
+            <tr>
+                <td>@task.TaskName</td>
+                <td>
+                    <input @bind="@task.SubmissionLink" placeholder="Enter URL" />
+                </td>
+                <td>
+                    <input @bind-value="@task.Grade" placeholder="Grade" disabled />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<button @onclick="SaveSubmissions">Submit</button>
+
+@code {
+    private List<TaskSubmission> Tasks { get; set; } = new List<TaskSubmission>
+    {
+        new TaskSubmission { TaskName = "Task 1", Grade = "A" },
+        new TaskSubmission { TaskName = "Task 2", Grade = "B+" },
+        // Add more tasks with dummy grades as needed
+    };
+
+    private void SaveSubmissions()
+    {
+        // Code to save submission links goes here
+        // This could involve saving to a database, an API call, etc.
+    }
+
+    private class TaskSubmission
+    {
+        public string TaskName { get; set; }
+        public string SubmissionLink { get; set; }
+        public string Grade { get; set; }
+    }
+}
