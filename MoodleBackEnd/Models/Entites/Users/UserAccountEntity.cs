@@ -7,20 +7,22 @@
         public string Email { get; set; }
         public string Username { get; set; }
         public string Password { get; private set; }
-        public bool IsAdmin { get; set; }
+        public UserAccountType AccountType { get; set; }
 
         private UserAccountEntity()
         {
 
         }
-        public static UserAccountEntity Create(string username, string password, bool isAdmin)
+        public static UserAccountEntity Create(string username, string password, UserAccountType type)
         {
             return new UserAccountEntity
             {
                 Username = username,
                 Password = BCrypt.Net.BCrypt.EnhancedHashPassword(password),
-                IsAdmin = isAdmin,
+                AccountType = type,
             };
         }
+        public bool VerifyPassword(string pwd) => BCrypt.Net.BCrypt.EnhancedVerify(pwd, Password);
     }
+    public enum UserAccountType { Admin, Instructor, Student}
 }

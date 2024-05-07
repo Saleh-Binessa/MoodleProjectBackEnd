@@ -40,8 +40,9 @@ namespace MoodleBackEnd.Models.Services
             {
         new Claim(TokenClaimsConstant.Username, username),
         new Claim(TokenClaimsConstant.UserId, userAccount.Id.ToString()),
-        new Claim(ClaimTypes.Role, userAccount.IsAdmin ? "Admin" : "User")
+        new Claim(ClaimTypes.Role, userAccount.AccountType.ToString())
         };
+
             // To Here
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
