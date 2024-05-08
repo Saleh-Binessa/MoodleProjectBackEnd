@@ -1,0 +1,152 @@
+﻿@page "/calendar"
+
+@using System
+@code {
+    private DateTime selectedDate1 { get; set; } = DateTime.Today;
+    private DateTime selectedDate2 { get; set; } = DateTime.Today;
+    private DateTime selectedDate3 { get; set; } = DateTime.Today;
+    private DateTime selectedDate4 { get; set; } = DateTime.Today;
+    private DateTime selectedDate5 { get; set; } = DateTime.Today;
+    private DateTime selectedDate6 { get; set; } = DateTime.Today;
+    private DateTime selectedDate7 { get; set; } = DateTime.Today;
+    private DateTime selectedDate8 { get; set; } = DateTime.Today;
+}
+<style>
+    .footer {
+        font-size: 12px;
+        text-align: center;
+        color: #777;
+        margin-top: 20px;
+    }
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top App Bar Example</title>
+    <style>
+       
+        .top-app-bar {
+            background-color: #243189; /* Change to your desired background color */
+            color: #ffffff; /* Change to your desired text color */
+            padding: 10px 20px; /* Adjust padding as needed */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
+            text-align: center;
+        }
+
+        /* Styling for the app bar title */
+        .app-bar-title {
+            margin: 0;
+            font-size: 20px; /* Adjust font size as needed */
+        }
+    </style>
+</head>
+
+<head>
+<style>
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh; 
+        }
+
+        .enlarged-table {
+            width: 90%;
+            height: 90%; 
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+            .enlarged-table th,
+            .enlarged-table td {
+                text-align: center;
+                padding: 10px;
+                
+            }
+
+        .centered-placeholder::placeholder {
+            
+            text-align: center;
+        }
+
+        .enlarged-table .left-aligned {
+            text-align: left;
+        }
+table, th, td {
+  border: 1px solid  darkblue;
+  border-collapse: collapse;
+}
+</style>
+</head>
+
+<body>
+<div class="top-app-bar">
+    <h1 class="app-bar-title">Calendar</h1>
+</div>
+
+<div class="center-container">
+    <table class="enlarged-table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Resources</th>
+            <th>Tasks</th>
+            <th>Recordings</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="left-aligned"><input type="date" @bind-value="selectedDate1" /></td>
+            <td>Resource1</td>
+            <td>Task1</td>
+                <td><input type="text" id="textInput" name="textInput" style="width: 100%;" class="centered-placeholder" placeholder="Enter URL here"></td>
+        </tr>
+        <tr>
+            <td class="left-aligned"><input type="date" @bind-value="selectedDate2" /></td>
+            <td>Resource2</td>
+            <td>Task2</td>
+                <td><input type="text" id="textInput" name="textInput" style="width: 100%;" class="centered-placeholder" placeholder="Enter URL here"></td>
+            </tr>
+        <tr>
+            <td class="left-aligned"><input type="date" @bind-value="selectedDate3" /></td>
+            <td>Resource3</td>
+            <td>Task3</td>
+                <td><input type="text" id="textInput" name="textInput" style="width: 100%;" class="centered-placeholder" placeholder="Enter URL here"></td>
+            </tr>
+        <tr>
+            <td class="left-aligned"><input type="date" @bind-value="selectedDate4" /></td>
+            <td>Resource4</td>
+            <td>Task4</td>
+                <td><input type="text" id="textInput" name="textInput" style="width: 100%;" class="centered-placeholder" placeholder="Enter URL here"></td>
+            </tr>
+        <tr>
+            <td class="left-aligned"><input type="date" @bind-value="selectedDate5" /></td>
+            <td>Resource5</td>
+            <td>Task5</td>
+                <td><input type="text" id="textInput" name="textInput" style="width: 100%;" class="centered-placeholder" placeholder="Enter URL here"></td>
+            </tr>
+        <tr>
+            <td class="left-aligned"><input type="date" @bind-value="selectedDate6" /></td>
+            <td>Resource6</td>
+            <td>Task6</td>
+                <td><input type="text" id="textInput" name="textInput" style="width: 100%;" class="centered-placeholder" placeholder="Enter URL here"></td>
+            </tr>
+        <tr>
+            <td class="left-aligned"><input type="date" @bind-value="selectedDate7" /></td>
+            <td>Resource7</td>
+            <td>Task7</td>
+                <td><input type="text" id="textInput" name="textInput" style="width: 100%;" class="centered-placeholder" placeholder="Enter URL here"></td>
+            </tr>
+        <tr>
+            <td class="left-aligned"><input type="date" @bind-value="selectedDate8" /></td>
+            <td>Resource8</td>
+            <td>Task8</td>
+                <td><input type="text" id="textInput" name="textInput" style="width: 100%;" class="centered-placeholder" placeholder="Enter URL here"></td>
+            </tr>
+    </tbody>
+</table>
+</div>
+<div class="footer">Created by Coded</div>
+</body>
