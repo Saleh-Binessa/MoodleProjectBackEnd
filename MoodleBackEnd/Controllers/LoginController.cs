@@ -37,11 +37,13 @@ namespace MoodleBackEnd.Controllers
         public IActionResult CreateUserAndAssignRole(SignupRequest request)
         {
             // Create the user account first
-            var userAccount = UserAccountEntity.Create(request.Username, request.Password, request.AccountType);
+            var userAccount = UserAccountEntity.Create(request.Name, request.Email, request.Username, request.Password, request.AccountType);
             userAccount.Name = request.Name;
             userAccount.Email = request.Email;
+            userAccount.Username = request.Username;
+            userAccount.Password = request.Password;
             _context.UserAccounts.Add(userAccount);
-            _context.SaveChanges();  // Ensure the UserAccount ID is generated before using it
+            _context.SaveChanges();  
 
             // Assign the role based on the account type
             switch (request.AccountType)
@@ -52,7 +54,7 @@ namespace MoodleBackEnd.Controllers
                         Name = userAccount.Name,
                         Email = userAccount.Email,
                         UserAccountId = userAccount.Id,
-                        Account = userAccount
+                        AccountType = userAccount.AccountType = Role.Admin
                     };
                     _context.Admins.Add(adminEntity);
                     break;
@@ -63,7 +65,7 @@ namespace MoodleBackEnd.Controllers
                         Name = userAccount.Name,
                         Email = userAccount.Email,
                         UserAccountId = userAccount.Id,
-                        Account = userAccount
+                        AccountType = userAccount.AccountType = Role.Instructor
                     };
                     _context.Instructors.Add(instructorEntity);
                     break;
@@ -74,7 +76,8 @@ namespace MoodleBackEnd.Controllers
                         Name = userAccount.Name,
                         Email = userAccount.Email,
                         UserAccountId = userAccount.Id,
-                        Account = userAccount
+                        Account = userAccount,
+                        AccountType = userAccount.AccountType = Role.Student
                     };
                     _context.Students.Add(studentEntity);
                     break;

@@ -18,7 +18,7 @@ namespace MoodleBackEnd.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         [HttpGet]
         public ActionResult<List<InstructorResponse>> GetAllInstructors()
         {
@@ -31,7 +31,7 @@ namespace MoodleBackEnd.Controllers
             return Ok(instructors);
         }
 
-        [Authorize(Roles = "admin")]
+      //  [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         //[Authorize]
         public ActionResult<InstructorResponse> GetInstructorDetails(int id)
@@ -51,7 +51,7 @@ namespace MoodleBackEnd.Controllers
 
         }
         [HttpPost]
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         public IActionResult AddInstructor(InstructorRequest request)
         {
             var instructor = new InstructorEntity()

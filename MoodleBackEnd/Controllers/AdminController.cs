@@ -9,7 +9,8 @@ using MoodleBackEnd.Models.Responses;
 
 namespace MoodleBackEnd.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Route("api/[controller]")]
+    [ApiController]
     public class AdminController : ControllerBase
     {
 
@@ -20,44 +21,51 @@ namespace MoodleBackEnd.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<InstructorResponse>> GetAllInstructors()
+        public ActionResult<List<AdminResponse>> GetAllAdmins()
         {
-            var instructors = _context.Instructors.Select(e => new InstructorResponse
+            var admins = _context.Admins.Select(e => new AdminResponse
             {
                 Id = e.Id,
                 Name = e.Name,
-                Email = e.Email
+                Email = e.Email,
+                UserAccountId = e.UserAccountId,
+                Username = e.Account.Username
             }).ToList();
-            return Ok(instructors);
+            return Ok(admins);
         }
 
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         //[Authorize]
-        public ActionResult<InstructorResponse> GetInstructorDetails(int id)
+        public ActionResult<AdminResponse> GetAdminDetails(int id)
         {
-            var instructor = _context.Instructors.Find(id);
-            if (instructor == null)
+            var admin = _context.Admins.Find(id);
+            if (admin == null)
             {
                 return NotFound();
             }
-            var response = new InstructorResponse
+            var response = new AdminResponse
             {
                 Id = id,
-                Name = instructor.Name,
-                Email = instructor.Email,
+                Name = admin.Name,
+                Email = admin.Email,
+                UserAccountId = admin.UserAccountId,
+                AccountType = admin.AccountType,
             };
             return Ok(response);
 
         }
         [HttpPost]
-        [Authorize(Roles = "admin")]
-        public IActionResult AddInstructor(InstructorRequest request)
+        //[Authorize(Roles = "admin")]
+        public IActionResult AddAdmin(AdminRequest request)
         {
             var instructor = new InstructorEntity()
             {
                 Name = request.Name,
-                Email = request.Email
+                Email = request.Email,
+
+                UserAccountId = request.UserAccountId,
+                AccountType = request.AccountType,
             };
             _context.Instructors.Add(instructor);
             _context.SaveChanges();
