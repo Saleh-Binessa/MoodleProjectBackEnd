@@ -34,21 +34,59 @@ namespace MoodleBackEnd.Controllers
         }
 
         [HttpPost("Register")]
-        public IActionResult Register(SignupRequest request)
+        public IActionResult CreateUserAndAssignRole(SignupRequest request)
         {
-            var isAdmin = false;
-            if (_context.UserAccounts.Count() == 0)
+            // Create the user account first
+            var userAccount = UserAccountEntity.Create(request.Username, request.Password, request.AccountType);
+            userAccount.Name = request.Name;
+            userAccount.Email = request.Email;
+            _context.UserAccounts.Add(userAccount);
+            _context.SaveChanges();  // Ensure the UserAccount ID is generated before using it
+
+            // Assign the role based on the account type
+            switch (request.AccountType)
             {
-               isAdmin = true;
+                case Role.Admin: // Admin
+                    var adminEntity = new AdminEntity
+                    {
+                        Name = userAccount.Name,
+                        Email = userAccount.Email,
+                        UserAccountId = userAccount.Id,
+                        Account = userAccount
+                    };
+                    _context.Admins.Add(adminEntity);
+                    break;
+
+                case Role.Instructor: // Instructor
+                    var instructorEntity = new InstructorEntity
+                    {
+                        Name = userAccount.Name,
+                        Email = userAccount.Email,
+                        UserAccountId = userAccount.Id,
+                        Account = userAccount
+                    };
+                    _context.Instructors.Add(instructorEntity);
+                    break;
+
+                case Role.Student: // Student
+                    var studentEntity = new StudentEntity
+                    {
+                        Name = userAccount.Name,
+                        Email = userAccount.Email,
+                        UserAccountId = userAccount.Id,
+                        Account = userAccount
+                    };
+                    _context.Students.Add(studentEntity);
+                    break;
+
+                default:
+                    return BadRequest("Invalid account type specified.");
             }
-            var newUser = UserAccountEntity.Create(request.Username, request.Password, request.AccountType);
-            newUser.Name = request.Name;
-            newUser.Email = request.Email;
-            _context.UserAccounts.Add(newUser);
-            _context.SaveChanges();
 
-            return Ok(new { Message = "User Created" });
+            _context.SaveChanges();  // Save all changes to the database
 
+            return Ok(new { Message = "User and role created successfully." });
         }
+
     }
 }

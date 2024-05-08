@@ -20,30 +20,48 @@ namespace MoodleBackEnd.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<InstructorResponse>> GetAllInstructors()
         {
-            return new string[] { "value1", "value2" };
+            var instructors = _context.Instructors.Select(e => new InstructorResponse
+            {
+                Id = e.Id,
+                Name = e.Name,
+                Email = e.Email
+            }).ToList();
+            return Ok(instructors);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
-        public string Get(int id)
+        //[Authorize]
+        public ActionResult<InstructorResponse> GetInstructorDetails(int id)
         {
-            return "value";
-        }
+            var instructor = _context.Instructors.Find(id);
+            if (instructor == null)
+            {
+                return NotFound();
+            }
+            var response = new InstructorResponse
+            {
+                Id = id,
+                Name = instructor.Name,
+                Email = instructor.Email,
+            };
+            return Ok(response);
 
+        }
         [HttpPost]
-        public void Post([FromBody] string value)
+        [Authorize(Roles = "admin")]
+        public IActionResult AddInstructor(InstructorRequest request)
         {
-        }
-
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var instructor = new InstructorEntity()
+            {
+                Name = request.Name,
+                Email = request.Email
+            };
+            _context.Instructors.Add(instructor);
+            _context.SaveChanges();
+            return Ok(new { Message = "Instructor Added" });
         }
     }
 }

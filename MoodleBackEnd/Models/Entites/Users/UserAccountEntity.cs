@@ -24,7 +24,7 @@
             {
                 Username = username,
                 Password = BCrypt.Net.BCrypt.EnhancedHashPassword(password),
-                AccountType = type,
+                AccountType = Role.Admin,
             };
         }
         public bool VerifyPassword(string pwd) => BCrypt.Net.BCrypt.EnhancedVerify(pwd, Password);
