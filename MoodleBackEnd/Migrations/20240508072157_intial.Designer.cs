@@ -12,8 +12,8 @@ using MoodleBackEnd.Models.Entites;
 namespace MoodleBackEnd.Migrations
 {
     [DbContext(typeof(MoodleContext))]
-    [Migration("20240507133702_inital")]
-    partial class inital
+    [Migration("20240508072157_intial")]
+    partial class intial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
