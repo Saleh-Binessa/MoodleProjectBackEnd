@@ -53,22 +53,36 @@ namespace MoodleBackEnd.Controllers
 
         }
         [HttpPost]
-            // [Authorize(Roles = "admin")]
-            public IActionResult AddCourse(CourseRequest request)
+        public IActionResult AddCourse(CourseRequest request)
+        {
+            // Validate input
+            if (string.IsNullOrEmpty(request.Name) || string.IsNullOrEmpty(request.Description))
             {
-                var course = new CourseEntity()
-                {
+                return BadRequest("Course name and description are required.");
+            }
 
-                    Name = request.Name,
-                    Description = request.Description,
-                   // Phases = request.Phases,
-                  //  Students = request.Students,
-                };
+            // Create and save the course
+            var course = new CourseEntity
+            {
+                Name = request.Name,
+                Description = request.Description
+            };
+
+            try
+            {
                 _context.Courses.Add(course);
                 _context.SaveChanges();
             return Ok(new { Message = "Course Added" });
+
+                return CreatedAtAction(nameof(GetCourseDetails), new { id = course.Id }, course);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error saving the course: {ex.Message}");
+            }
+
         }
 
 
-        }
+    }
     }
