@@ -12,8 +12,8 @@ using MoodleBackEnd.Models.Entites;
 namespace MoodleBackEnd.Migrations
 {
     [DbContext(typeof(MoodleContext))]
-    [Migration("20240507133702_inital")]
-    partial class inital
+    [Migration("20240508074236_intialize")]
+    partial class intialize
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace MoodleBackEnd.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CourseEntityStudentEntity", b =>
+                {
+                    b.Property<int>("CoursesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentsStudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CoursesId", "StudentsStudentId");
+
+                    b.HasIndex("StudentsStudentId");
+
+                    b.ToTable("CourseEntityStudentEntity");
+                });
 
             modelBuilder.Entity("MoodleBackEnd.Models.Entites.CourseEntity", b =>
                 {
@@ -44,12 +59,7 @@ namespace MoodleBackEnd.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
 
                     b.ToTable("Courses");
                 });
@@ -320,15 +330,19 @@ namespace MoodleBackEnd.Migrations
                     b.ToTable("UserAccounts");
                 });
 
-            modelBuilder.Entity("MoodleBackEnd.Models.Entites.CourseEntity", b =>
+            modelBuilder.Entity("CourseEntityStudentEntity", b =>
                 {
-                    b.HasOne("MoodleBackEnd.Models.Entites.Users.StudentEntity", "Student")
-                        .WithMany("Courses")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                    b.HasOne("MoodleBackEnd.Models.Entites.CourseEntity", null)
+                        .WithMany()
+                        .HasForeignKey("CoursesId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Student");
+                    b.HasOne("MoodleBackEnd.Models.Entites.Users.StudentEntity", null)
+                        .WithMany()
+                        .HasForeignKey("StudentsStudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MoodleBackEnd.Models.Entites.GradeEntity", b =>
@@ -468,11 +482,6 @@ namespace MoodleBackEnd.Migrations
                 });
 
             modelBuilder.Entity("MoodleBackEnd.Models.Entites.Users.InstructorEntity", b =>
-                {
-                    b.Navigation("Courses");
-                });
-
-            modelBuilder.Entity("MoodleBackEnd.Models.Entites.Users.StudentEntity", b =>
                 {
                     b.Navigation("Courses");
                 });
