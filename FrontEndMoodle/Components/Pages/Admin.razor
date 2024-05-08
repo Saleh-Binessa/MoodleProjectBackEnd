@@ -1,0 +1,211 @@
+﻿@page "/admin"
+@inject NavigationManager Navigation
+@inject HttpClient Http
+@using System.IdentityModel.Tokens.Jwt
+@using System.ComponentModel.DataAnnotations
+@using MoodleBackEnd.Models.Requests
+@using MoodleBackEnd.Models.Responses
+@using System.Net.Http.Headers
+@using System.Security.Claims
+
+<div class="d-flex flex-column align-items-center p-3 vh-100">
+    <div class="form-container bg-light rounded shadow p-4" style="max-width: 600px; width: 100%;">
+        <h1 class="text-center mb-4">Admin: Course Management</h1>
+
+        @if (isAdmin)
+        {
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success text-center">@successMessage</div>
+            }
+
+            <h2>Add a New Course</h2>
+            <EditForm Model="newCourse" OnValidSubmit="AddCourse">
+                <div class="form-group mb-3">
+                    <label>Name:</label>
+                    <InputText @bind-Value="newCourse.Name" class="form-control" />
+                </div>
+                <div class="form-group mb-3">
+                    <label>Description:</label>
+                    <InputText @bind-Value="newCourse.Description" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Add Course</button>
+            </EditForm>
+
+            <h2 class="mt-4">Select a Course</h2>
+            <select class="form-select mb-3" @bind="selectedCourseId">
+                @foreach (var course in courses)
+                {
+                    <option value="@course.Id">@course.Name</option>
+                }
+            </select>
+
+            <h3>Assign Registered Student</h3>
+            <select class="form-select mb-3" @bind="selectedStudentId">
+                @foreach (var student in students)
+                {
+                    <option value="@student.Id">@student.Name</option>
+                }
+            </select>
+            <button class="btn btn-secondary w-100 mb-4" @onclick="AssignStudent">Assign Student</button>
+
+            <h3>Assign Registered Instructor</h3>
+            <select class="form-select mb-3" @bind="selectedInstructorId">
+                @foreach (var instructor in instructors)
+                {
+                    <option value="@instructor.Id">@instructor.Name</option>
+                }
+            </select>
+            <button class="btn btn-secondary w-100" @onclick="AssignInstructor">Assign Instructor</button>
+        }
+        else
+        {
+            <h3 class="text-center text-danger">Access Denied: Admin privileges are required to view this page.</h3>
+        }
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]
+    private GlobalAppState AppState { get; set; }
+    // Variables to hold data
+    private List<CourseResponse> courses = new List<CourseResponse>();
+    private List<StudentResponse> students = new List<StudentResponse>();
+    private List<InstructorResponse> instructors = new List<InstructorResponse>();
+
+    // New course data model
+    private CourseRequest newCourse = new CourseRequest { Name = string.Empty, Description = string.Empty };
+
+    // Selected values for assignment
+    private int selectedCourseId;
+    private int selectedStudentId;
+    private int selectedInstructorId;
+
+    // Success message
+    private string successMessage;
+
+    // JWT Token (Replace with your own token retrieval method)
+    private string jwtToken = "";
+    private bool isAdmin = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Set up JWT token header for API calls
+        Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+        // Check if the user has the 'admin' role
+        try
+        {
+            CheckAdminRoleFromJwtToken(AppState.AuthToken);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error reading token: {ex.Message}");
+            isAdmin = false; // If token is malformed or empty
+        }
+
+        // Fetch courses, students, and instructors if the user is an admin
+        if (isAdmin)
+        {
+            await FetchAllData();
+        }
+        else
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    // Method to determine if the user is an admin from the JWT token
+    private void CheckAdminRoleFromJwtToken(string token)
+    {
+        // Check for empty or null token
+        if (string.IsNullOrEmpty(token))
+        {
+            throw new ArgumentException("Token is empty or null.");
+        }
+
+        var handler = new JwtSecurityTokenHandler();
+
+        if (!handler.CanReadToken(token))
+        {
+            throw new ArgumentException("JWT token is not well-formed.");
+        }
+
+        var jwtToken = handler.ReadJwtToken(token);
+        isAdmin = jwtToken.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "Admin");
+    }
+
+    // Fetch all courses, students, and instructors
+    private async Task FetchAllData()
+    {
+        try
+        {
+            courses = await Http.GetFromJsonAsync<List<CourseResponse>>("https://localhost:7137/api/Course");
+            students = await Http.GetFromJsonAsync<List<StudentResponse>>("https://localhost:7137/api/Student");
+            instructors = await Http.GetFromJsonAsync<List<InstructorResponse>>("https://localhost:7137/api/Instructor");
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Error fetching data: {ex.Message}");
+        }
+    }
+
+    // Add a new course
+    private async Task AddCourse()
+    {
+        try
+        {
+            var response = await Http.PostAsJsonAsync("https://localhost:7137/api/Course", newCourse);
+            if (response.IsSuccessStatusCode)
+            {
+                successMessage = "Course added successfully!";
+                await FetchAllData(); // Refresh the courses list
+                newCourse = new CourseRequest { Name = string.Empty, Description = string.Empty }; // Reset form
+            }
+            else
+            {
+                successMessage = $"Failed to add course: {response.StatusCode} - {response.ReasonPhrase}";
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            successMessage = $"Request error: {ex.Message}";
+        }
+    }
+
+    // Assign a student to a selected course
+    private async Task AssignStudent()
+    {
+        var request = new { studentId = selectedStudentId, courseId = selectedCourseId };
+        try
+        {
+            var response = await Http.PostAsJsonAsync("https://localhost:7137/api/Course/assign-student", request);
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Failed to assign student: {response.StatusCode} - {response.ReasonPhrase}");
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+    }
+
+    // Assign an instructor to a selected course
+    private async Task AssignInstructor()
+    {
+        var request = new { instructorId = selectedInstructorId, courseId = selectedCourseId };
+        try
+        {
+            var response = await Http.PostAsJsonAsync("https://localhost:7137/api/Course/assign-instructor", request);
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Failed to assign instructor: {response.StatusCode} - {response.ReasonPhrase}");
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Request error: {ex.Message}");
+        }
+    }
+}
