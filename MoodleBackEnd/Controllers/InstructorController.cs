@@ -4,6 +4,7 @@ using MoodleBackEnd.Models.Entites.Users;
 using MoodleBackEnd.Models.Entites;
 using MoodleBackEnd.Models.Requests;
 using MoodleBackEnd.Models.Responses;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MoodleBackEnd.Controllers
 {
@@ -17,7 +18,7 @@ namespace MoodleBackEnd.Controllers
             _context = context;
         }
 
-        // [Authorize]
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public ActionResult<List<InstructorResponse>> GetAllInstructors()
         {
@@ -30,6 +31,7 @@ namespace MoodleBackEnd.Controllers
             return Ok(instructors);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("{id}")]
         //[Authorize]
         public ActionResult<InstructorResponse> GetInstructorDetails(int id)
@@ -49,7 +51,7 @@ namespace MoodleBackEnd.Controllers
 
         }
         [HttpPost]
-        // [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         public IActionResult AddInstructor(InstructorRequest request)
         {
             var instructor = new InstructorEntity()
@@ -59,7 +61,7 @@ namespace MoodleBackEnd.Controllers
             };
             _context.Instructors.Add(instructor);
             _context.SaveChanges();
-            return Created(nameof(GetInstructorDetails), new { id = instructor.Id });
+            return Ok(new { Message = "Instructor Added" });
         }
     }
 }

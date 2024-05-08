@@ -19,27 +19,31 @@ namespace MoodleBackEnd.Models.Entites
         public DbSet<PhaseEntity> Phases { get; set; }
         public DbSet<MaterialEntity> Materials { get; set; }
         public DbSet<TaskEntity> Tasks { get; set; }
+        public DbSet<SubmissionEntity> Submissions { get; set; }
+        public DbSet<GradeEntity> Grades { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<StudentCourse>()
-                .HasKey(sc => new { sc.StudentId, sc.CourseId });
-
-            modelBuilder.Entity<StudentCourse>()
-                .HasOne(sc => sc.Student)
-                .WithMany(s => s.Courses)
-                .HasForeignKey(sc => sc.StudentId);
-
-            modelBuilder.Entity<StudentCourse>()
-                .HasOne(sc => sc.Course)
-                .WithMany(c => c.Students)
-                .HasForeignKey(sc => sc.CourseId);
-
             modelBuilder.Entity<CourseEntity>()
-                .HasOne(c => c.Instructor)
-                .WithMany(i => i.Courses)
-                .HasForeignKey(c => c.InstructorId);
+     .HasOne(c => c.Student)
+     .WithMany(s => s.Courses)
+     .HasForeignKey(c => c.StudentId)
+     .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<InstructorCourse>()
+            .HasKey(sc => new { sc.InstructorId, sc.CourseId });
+
+            modelBuilder.Entity<InstructorCourse>()
+                .HasOne(sc => sc.Instructor)
+                .WithMany(s => s.Courses)
+                .HasForeignKey(sc => sc.InstructorId);
+
+            modelBuilder.Entity<InstructorCourse>()
+                .HasOne(sc => sc.Course)
+                .WithMany(c => c.Instructors)
+                .HasForeignKey(sc => sc.CourseId);
 
             modelBuilder.Entity<PhaseEntity>()
                 .HasOne(p => p.Course)
@@ -59,7 +63,7 @@ namespace MoodleBackEnd.Models.Entites
             modelBuilder.Entity<TaskEntity>()
                 .HasOne(t => t.Submission)
                 .WithOne(s => s.Task)
-                .HasForeignKey<SubmissionEntity>(s => s.TaskId);
+                .HasForeignKey<SubmissionEntity>(s => s.TaskEntityId);
 
             modelBuilder.Entity<SubmissionEntity>()
 

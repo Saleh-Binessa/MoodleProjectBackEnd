@@ -4,68 +4,66 @@ using Microsoft.AspNetCore.Mvc;
 using MoodleBackEnd.Models.Entites;
 using MoodleBackEnd.Models.Requests;
 using MoodleBackEnd.Models.Responses;
+using System.Threading.Tasks;
 
 namespace MoodleBackEnd.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MaterialController : ControllerBase
+    public class TasksController : ControllerBase
     {
         private readonly MoodleContext _context;
-        public MaterialController(MoodleContext context)
+        public TasksController(MoodleContext context)
         {
             _context = context;
         }
 
         [Authorize(Roles = "Admin,Instructor,Student")]
         [HttpGet]
-        public ActionResult<List<MaterialResponse>> GetAllMaterials()
+        public ActionResult<List<TaskResponse>> GetAllTasks()
         {
-            var materials = _context.Materials.Select(e => new MaterialResponse
+            var tasks = _context.Tasks.Select(e => new TaskResponse
             {
                 Id = e.Id,
-                Title = e.Title,
+                Name = e.Name,
                 Description = e.Description,
-                Date = e.Date,
 
             }).ToList();
-            return Ok(materials);
+            return Ok(tasks);
         }
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin,Instructor,Student")]
-        public ActionResult<MaterialResponse> GetMaterialDetails(int id)
+        public ActionResult<TaskResponse> GetTaskDetails(int id)
         {
-            var material = _context.Materials.Find(id);
-            if (material == null)
+            var task = _context.Tasks.Find(id);
+            if (task == null)
             {
                 return NotFound();
             }
-            var response = new MaterialEntity
+            var response = new TaskEntity
             {
-                Id = material.Id = id,
-                Title = material.Title,
-                Description = material.Description,
+                Id = task.Id = id,
+                Name = task.Name,
+                Description = task.Description,
+                MaterialId = task.MaterialId,
             };
             return Ok(response);
         }
         [HttpPost]
         [Authorize(Roles = "Admin,Instructor")]
-        public IActionResult AddMaterial(MaterialRequest request)
+        public IActionResult AddTask(TaskRequest request)
         {
-            var material = new MaterialEntity()
+            var task = new TaskEntity()
             {
 
-                Title = request.Title,
+                Name = request.Name,
                 Description = request.Description,
-                Date = DateOnly.FromDateTime(request.Date),
-
+                DeadLine = request.DeadLine,
             };
-            _context.Materials.Add(material);
+            _context.Tasks.Add(task);
             _context.SaveChanges();
-            return Ok(new { Message = "Material Added" });
+            return Ok(new { Message = "Task Added" });
         }
-
-
     }
 }

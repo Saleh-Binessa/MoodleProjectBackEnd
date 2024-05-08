@@ -66,8 +66,8 @@ namespace MoodleBackEnd.Controllers
                 };
                 _context.Courses.Add(course);
                 _context.SaveChanges();
-                return CreatedAtAction(nameof(GetCourseDetails), new { id = course.Id });
-            }
+            return Ok(new { Message = "Course Added" });
+        }
 
 
         }

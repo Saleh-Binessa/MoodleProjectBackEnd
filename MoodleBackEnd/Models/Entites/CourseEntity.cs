@@ -8,11 +8,11 @@ namespace MoodleBackEnd.Models.Entites
         public string Name { get; set; }
         public string Description { get; set; }
         public List<PhaseEntity> Phases { get; set; }
-        public List<StudentCourse> Students { get; set; }
+        public int StudentId { get; set; }
+        public StudentEntity Student { get; set; }
         public int InstructorId { get; set; }
-        public InstructorEntity Instructor { get; set; }
+        public List<InstructorCourse> Instructors { get; set; }
 
-        public CourseEntity() { }
     }
     
 }

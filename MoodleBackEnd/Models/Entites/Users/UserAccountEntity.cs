@@ -7,7 +7,7 @@
         public string Email { get; set; }
         public string Username { get; set; }
         public string Password { get; private set; }
-        public UserAccountType AccountType { get; set; }
+        public Role AccountType { get; set; }
 
 
         public StudentEntity Student { get; set; }
@@ -18,7 +18,7 @@
         {
 
         }
-        public static UserAccountEntity Create(string username, string password, UserAccountType type)
+        public static UserAccountEntity Create(string username, string password, Role type)
         {
             return new UserAccountEntity
             {
@@ -29,5 +29,5 @@
         }
         public bool VerifyPassword(string pwd) => BCrypt.Net.BCrypt.EnhancedVerify(pwd, Password);
     }
-    public enum UserAccountType { Admin, Instructor, Student}
+    public enum Role { Admin, Instructor, Student}
 }

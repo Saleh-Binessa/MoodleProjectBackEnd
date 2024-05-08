@@ -1,13 +1,12 @@
-﻿namespace MoodleBackEnd.Models.Entites
+﻿using MoodleBackEnd.Models.Entites;
+
+namespace MoodleBackEnd.Models.Responses
 {
-    public class SubmissionEntity
+    public class SubmissionResponse
     {
-        public int Id { get; set; }
         public string SubmissionLink { get; set; }
         public DateTime? CreatedDate { get; set; } = DateTime.Now;
-        public int TaskEntityId { get; set; }
         public TaskEntity Task { get; set; }
-        public int GradeId { get; set; }
         public GradeEntity Grade { get; }
     }
 }

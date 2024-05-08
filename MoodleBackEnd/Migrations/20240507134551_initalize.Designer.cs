@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MoodleBackEnd.Models.Entites;
 
@@ -11,9 +12,11 @@ using MoodleBackEnd.Models.Entites;
 namespace MoodleBackEnd.Migrations
 {
     [DbContext(typeof(MoodleContext))]
-    partial class MoodleContextModelSnapshot : ModelSnapshot
+    [Migration("20240507134551_initalize")]
+    partial class initalize
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
