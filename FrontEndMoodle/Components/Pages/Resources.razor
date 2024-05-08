@@ -1,0 +1,132 @@
+﻿@page "/resources"
+
+
+@code {
+    private string resourceName { get; set; } = "C# Lessons";
+    private string introParagraph { get; set; } = "Write an Intro Paragraph Here";
+    private string lessonDetail1 { get; set; } = "C# Lessons 1";
+    private string lessonDetail2 { get; set; } = "C# Lessons 2";
+    private string lessonDetail3 { get; set; } = "C# Lessons 3";
+    private string lessonDetail4 { get; set; } = "C# Lessons 4";
+    private string lessonDetail5 { get; set; } = "C# Lessons 5";
+   
+    private string diveDeep1 { get; set; } = "Dive Deep 1";
+    private string diveDeep2 { get; set; } = "Dive Deep 2";
+   
+}
+
+ 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-pQKJ0ftqHLhc6+Ks54e5twhcnHF2MLBeZ2yzDcZaVYCKH2Xykm1ZMI2+ZhJf+Yw1WXLO8wMRG9G2V5fLiZByFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .icon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 24px;
+            color: #007bff;
+            margin: 10px; 
+        }
+
+        .header {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section-content {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .text {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .subtext{
+            margin-bottom: 10px
+        }
+
+        .list-item {
+            margin-bottom: 5px;
+        }
+
+        .footer {
+            font-size: 12px;
+            text-align: center;
+            color: #777;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <i class="icon fas fa-star"></i>
+        <div class="header">@resourceName</div>
+
+        <div class="section">
+            <div class="section-content">
+                <div class="text">Introduction</div>
+                <div class="subtext">@introParagraph</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-content">
+                <div class="text">Implementation</div>
+                <div class="subtext">@lessonDetail1</div>
+                <div class="subtext">@lessonDetail2</div>
+                <div class="subtext">@lessonDetail3</div>
+                <div class="subtext">@lessonDetail4</div>
+                <div class="subtext">@lessonDetail5</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-content">
+                <div class="text">Dive Deep</div>
+                <div class="subtext">@diveDeep1</div>
+                <div class="subtext">@diveDeep2</div>
+            </div>
+        </div>
+        <div class="footer">Created by Coded</div>
+    </div>
+</body>
+ 
+
