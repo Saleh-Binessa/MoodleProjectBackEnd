@@ -11,5 +11,6 @@ namespace MoodleBackEnd.Models.Entites.Users
         public int UserAccountId { get; set; }  
         public UserAccountEntity Account { get; set; }
         public List<CourseEntity> Courses { get; set; }
+        public Role AccountType { get; set; }
     }
 }

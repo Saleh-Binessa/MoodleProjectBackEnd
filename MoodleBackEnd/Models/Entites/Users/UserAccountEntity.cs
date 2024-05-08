@@ -6,7 +6,7 @@
         public string Name { get; set; }
         public string Email { get; set; }
         public string Username { get; set; }
-        public string Password { get; private set; }
+        public string Password { get; set; }
         public Role AccountType { get; set; }
 
 
@@ -18,10 +18,12 @@
         {
 
         }
-        public static UserAccountEntity Create(string username, string password, Role type)
+        public static UserAccountEntity Create(string name, string email, string username, string password, Role type)
         {
             return new UserAccountEntity
             {
+                Name = name,
+                Email = email,
                 Username = username,
                 Password = BCrypt.Net.BCrypt.EnhancedHashPassword(password),
                 AccountType = Role.Admin,

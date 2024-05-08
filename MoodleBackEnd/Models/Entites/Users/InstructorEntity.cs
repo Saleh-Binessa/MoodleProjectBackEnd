@@ -8,6 +8,6 @@
         public int UserAccountId { get; set; }
         public UserAccountEntity Account { get; set; }
         public List<InstructorCourse> Courses { get; set; }
-
+        public Role AccountType { get; set; }
     }
 }
