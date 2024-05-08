@@ -52,7 +52,7 @@ namespace MoodleBackEnd.Controllers
             return Ok(response);
 
         }
-        [HttpPost]
+        [HttpPost("addCourse")]
         public IActionResult AddCourse(CourseRequest request)
         {
             // Validate input
@@ -72,9 +72,8 @@ namespace MoodleBackEnd.Controllers
             {
                 _context.Courses.Add(course);
                 _context.SaveChanges();
-                return Ok(new { Message = "Course Added" });
 
-                return CreatedAtAction(nameof(GetCourseDetails), new { id = course.Id }, course);
+                return Ok(new { Message = "Course Added" });
             }
             catch (Exception ex)
             {

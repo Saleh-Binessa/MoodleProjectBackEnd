@@ -13,6 +13,7 @@ namespace MoodleBackEnd.Models.Entites
         }
 
         public DbSet<UserAccountEntity> UserAccounts { get; set; }
+        public DbSet<AdminEntity> Admins { get; set; }
         public DbSet<StudentEntity> Students { get; set; }
         public DbSet<InstructorEntity> Instructors { get; set; }
         public DbSet<CourseEntity> Courses { get; set; }
@@ -27,10 +28,8 @@ namespace MoodleBackEnd.Models.Entites
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CourseEntity>()
-     .HasOne(c => c.Student)
-     .WithMany(s => s.Courses)
-     .HasForeignKey(c => c.StudentId)
-     .OnDelete(DeleteBehavior.NoAction);
+     .HasMany(c => c.Students)
+     .WithMany(s => s.Courses);
 
             modelBuilder.Entity<InstructorCourse>()
             .HasKey(sc => new { sc.InstructorId, sc.CourseId });
