@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using MoodleBackEnd.Models.Entites.Users;
+using System.Diagnostics;
 
 namespace MoodleBackEnd.Models.Entites
 {
@@ -18,55 +19,73 @@ namespace MoodleBackEnd.Models.Entites
         public DbSet<PhaseEntity> Phases { get; set; }
         public DbSet<MaterialEntity> Materials { get; set; }
         public DbSet<TaskEntity> Tasks { get; set; }
+        public DbSet<SubmissionEntity> Submissions { get; set; }
+        public DbSet<GradeEntity> Grades { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<StudentEntity>()
-       .HasOne(s => s.Course)
-       .WithMany(c => c.Students)
-       .HasForeignKey(s => s.CourseId);
+            modelBuilder.Entity<CourseEntity>()
+     .HasOne(c => c.Student)
+     .WithMany(s => s.Courses)
+     .HasForeignKey(c => c.StudentId)
+     .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<InstructorCourse>()
+            .HasKey(sc => new { sc.InstructorId, sc.CourseId });
+
+            modelBuilder.Entity<InstructorCourse>()
+                .HasOne(sc => sc.Instructor)
+                .WithMany(s => s.Courses)
+                .HasForeignKey(sc => sc.InstructorId);
+
+            modelBuilder.Entity<InstructorCourse>()
+                .HasOne(sc => sc.Course)
+                .WithMany(c => c.Instructors)
+                .HasForeignKey(sc => sc.CourseId);
 
             modelBuilder.Entity<PhaseEntity>()
                 .HasOne(p => p.Course)
                 .WithMany(c => c.Phases)
                 .HasForeignKey(p => p.CourseId);
 
-            modelBuilder.Entity<PhaseMaterial>()
-                .HasKey(pm => new { pm.PhaseId, pm.MaterialId });
+            modelBuilder.Entity<MaterialEntity>()
+          .HasOne(m => m.Phase)
+          .WithMany(p => p.Materials)
+          .HasForeignKey(m => m.PhaseId);
 
-            modelBuilder.Entity<PhaseMaterial>()
-                .HasOne(pm => pm.Phase)
-                .WithMany(p => p.Materials)
-                .HasForeignKey(pm => pm.PhaseId);
-
-            modelBuilder.Entity<PhaseMaterial>()
-                .HasOne(pm => pm.Material)
-                .WithMany(m => m.Phases)
-                .HasForeignKey(pm => pm.MaterialId);
-
-            modelBuilder.Entity<MaterialTask>()
-                .HasKey(mt => new { mt.MaterialId, mt.TaskId });
-
-            modelBuilder.Entity<MaterialTask>()
-                .HasOne(mt => mt.Material)
+            modelBuilder.Entity<TaskEntity>()
+                .HasOne(t => t.Material)
                 .WithMany(m => m.Tasks)
-                .HasForeignKey(mt => mt.MaterialId);
-
-            modelBuilder.Entity<MaterialTask>()
-                .HasOne(mt => mt.Task)
-                .WithMany(t => t.Materials)
-                .HasForeignKey(mt => mt.TaskId);
+                .HasForeignKey(t => t.MaterialId);
 
             modelBuilder.Entity<TaskEntity>()
                 .HasOne(t => t.Submission)
                 .WithOne(s => s.Task)
-                .HasForeignKey<SubmissionEntity>(s => s.TaskId);
+                .HasForeignKey<SubmissionEntity>(s => s.TaskEntityId);
 
             modelBuilder.Entity<SubmissionEntity>()
+
                 .HasOne(s => s.Grade)
                 .WithOne(g => g.Submission)
                 .HasForeignKey<GradeEntity>(g => g.SubmissionId);
+
+
+            modelBuilder.Entity<StudentEntity>()
+                .HasOne(s => s.Account)
+                .WithOne(a => a.Student)
+                .HasForeignKey<StudentEntity>(s => s.UserAccountId);
+
+            modelBuilder.Entity<InstructorEntity>()
+                .HasOne(i => i.Account)
+                .WithOne(a => a.Instructor)
+                .HasForeignKey<InstructorEntity>(i => i.UserAccountId);
+
+            modelBuilder.Entity<AdminEntity>()
+                .HasOne(a => a.Account)
+                .WithOne(a => a.Admin)
+                .HasForeignKey<AdminEntity>(a => a.UserAccountId);
         }
     }
-}
+    }

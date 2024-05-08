@@ -72,12 +72,15 @@ namespace MoodleBackEnd.Controllers
             {
                 _context.Courses.Add(course);
                 _context.SaveChanges();
+            return Ok(new { Message = "Course Added" });
+
                 return CreatedAtAction(nameof(GetCourseDetails), new { id = course.Id }, course);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error saving the course: {ex.Message}");
             }
+
         }
 
 
