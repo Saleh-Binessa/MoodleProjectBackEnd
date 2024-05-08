@@ -24,8 +24,7 @@ namespace MoodleBackEnd.Controllers
         [HttpPost]
         public IActionResult Login(UserLoginRequest loginDetails)
         {
-            //var newAccount =  UserAccount.Create();
-            //var service = new TokenService(null,new BankContext("Data Source=db.app"))
+
             var response = service.GenerateToken(loginDetails.Username, loginDetails.Password);
             if (response.IsValid)
             {
@@ -37,11 +36,11 @@ namespace MoodleBackEnd.Controllers
         [HttpPost("Register")]
         public IActionResult Register(SignupRequest request)
         {
-            //var isAdmin = false;
-            //if (context.UserAccounts.Count() == 0)
-            //{
-            //    isAdmin = true;
-            //}
+            var isAdmin = false;
+            if (_context.UserAccounts.Count() == 0)
+            {
+               isAdmin = true;
+            }
             var newUser = UserAccountEntity.Create(request.Username, request.Password, request.AccountType);
             newUser.Name = request.Name;
             newUser.Email = request.Email;

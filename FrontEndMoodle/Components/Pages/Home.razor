@@ -1,11 +1,11 @@
 ﻿@page "/"
-@using Microsoft.AspNetCore.Components
 
+@using System
+@using System.Collections.Generic
+
+@inject TodoService TodoService
 
 <PageTitle>Home</PageTitle>
-
-<h1>Welcome to the Coded Dashboard</h1>
-
 @if (!string.IsNullOrWhiteSpace(AppState.Username))
 {
     <h3>Hello, @AppState.Username!</h3>
@@ -18,8 +18,138 @@ else
 {
     <h3>Welcome, guest! Please sign in to access your dashboard.</h3>
 }
+<div class="container">
+    <div class="header">
+        <img src="images/Image1.png" alt="Logo" class="logo" />
+    </div>
+
+    <div class="date-navigation">
+        <button class="arrow-button" @onclick="PreviousDay">←</button>
+        <span class="date-text">@currentDate.ToString("MMMM dd, yyyy")</span>
+        <button class="arrow-button" @onclick="NextDay">→</button>
+    </div>
+
+    <h4 class="todo-title">Todo List for @currentDate.ToString("MMMM dd, yyyy")</h4>
+
+    <table class="todo-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Is Completed</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in todoItems)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>
+                        <input type="checkbox" @bind="item.IsCompleted" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 30px;
+    }
+
+    .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .logo {
+        max-width: 200px;
+    }
+
+    .date-navigation {
+        width: 100%;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .date-text {
+        font-size: 20px;
+        margin: 0 20px;
+    }
+
+    .arrow-button {
+        font-size: 20px;
+        padding: 10px 15px;
+        cursor: pointer;
+        border: none;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .arrow-button:hover {
+        background-color: #d0d0d0;
+    }
+
+    .todo-title {
+        margin: 20px 0;
+    }
+
+    .todo-table {
+        width: 80%;
+        border-collapse: collapse;
+    }
+
+    .todo-table th, .todo-table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .todo-table th {
+        background-color: #f0f0f0;
+    }
+</style>
 
 @code {
+    private DateTime currentDate = DateTime.Today;
+    private List<TodoItem> todoItems = new List<TodoItem>();
+
+    protected override void OnInitialized()
+    {
+        LoadTodos();
+    }
+
+    private void LoadTodos()
+    {
+        todoItems = TodoService.GetTodosForDate(currentDate);
+    }
+
+    private void PreviousDay()
+    {
+        currentDate = currentDate.AddDays(-1);
+        LoadTodos();
+    }
+
+    private void NextDay()
+    {
+        currentDate = currentDate.AddDays(1);
+        LoadTodos();
+    }
+
+
     [CascadingParameter]
     private GlobalAppState AppState { get; set; }
+
 }
+

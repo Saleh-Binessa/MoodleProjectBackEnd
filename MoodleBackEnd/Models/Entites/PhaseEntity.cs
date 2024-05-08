@@ -7,7 +7,7 @@
         public string Description { get; set; }
         public int CourseId { get; set; }
         public CourseEntity Course { get; set; }
-        public ICollection<PhaseMaterial> Materials { get; set; }
+        public List<MaterialEntity> Materials { get; set; }
         public PhaseEntity() { }
     }
 }

@@ -19,13 +19,13 @@ namespace MoodleBackEnd.Controllers
             _context = context;
         }
 
-       // [Authorize]
+        [Authorize(Roles = "admin,Instructor")]
         [HttpGet]
         public ActionResult<List<StudentResponse>> GetAllStudents()
         {
             var students = _context.Students.Select(e => new StudentResponse
             {
-                Id = e.Id,
+                Id = e.StudentId,
                 Name = e.Name,
                 Email = e.Email
             }).ToList();
@@ -33,7 +33,7 @@ namespace MoodleBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize]
+        [Authorize]
         public ActionResult<StudentResponse> GetStudentDetails(int id)
         {
             var student = _context.Students.Find(id);
@@ -51,7 +51,7 @@ namespace MoodleBackEnd.Controllers
 
         }
         [HttpPost]
-       // [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         public IActionResult AddStudent(StudentRequest request)
         {
             var student = new StudentEntity()
@@ -61,7 +61,8 @@ namespace MoodleBackEnd.Controllers
             };
             _context.Students.Add(student);
             _context.SaveChanges();
-            return Created(nameof(GetStudentDetails), new { id = student.Id });
+            return Ok(new { Message = "Student Added" });
         }
+
     }
 }
