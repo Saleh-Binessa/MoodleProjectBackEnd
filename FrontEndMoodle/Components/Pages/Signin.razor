@@ -15,7 +15,6 @@
         <EditForm Model="loginModel" OnValidSubmit="LoginUserSubmit" FormName="SignInForm">
             <DataAnnotationsValidator />
             <Microsoft.AspNetCore.Components.Forms.ValidationSummary />
-
             <div class="form-group mb-3">
                 <label for="username" class="form-label text-center w-100">Username:</label>
                 <InputText id="username" @bind-Value="loginModel.Username" class="form-control" Placeholder="Enter your username" />
