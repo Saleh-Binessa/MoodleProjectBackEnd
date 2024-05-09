@@ -19,7 +19,7 @@ namespace MoodleBackEnd.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "admin,Instructor")]
+       // [Authorize(Roles = "admin,Instructor")]
         [HttpGet]
         public ActionResult<List<StudentResponse>> GetAllStudents()
         {
@@ -33,7 +33,7 @@ namespace MoodleBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
+        //[Authorize]
         public ActionResult<StudentResponse> GetStudentDetails(int id)
         {
             var student = _context.Students.Find(id);
@@ -51,7 +51,7 @@ namespace MoodleBackEnd.Controllers
 
         }
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         public IActionResult AddStudent(StudentRequest request)
         {
             var student = new StudentEntity()
