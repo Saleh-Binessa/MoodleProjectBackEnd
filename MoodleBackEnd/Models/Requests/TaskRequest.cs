@@ -7,5 +7,7 @@ namespace MoodleBackEnd.Models.Requests
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime DeadLine { get; set; }
+        public int MaterialId { get; set; }
+
     }
 }

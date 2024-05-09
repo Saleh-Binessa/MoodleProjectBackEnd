@@ -25,7 +25,7 @@ namespace MoodleBackEnd.Controllers
             var submissions = _context.Submissions.Select(e => new SubmissionResponse
             {
                 SubmissionLink = e.SubmissionLink,
-                CreatedDate = DateTime.Now,
+                Date = DateTime.Now,
 
             }).ToList();
             return Ok(submissions);
@@ -58,7 +58,7 @@ namespace MoodleBackEnd.Controllers
             {
 
                 SubmissionLink = request.SubmissionLink,
-                CreatedDate = request.CreatedDate,
+                CreatedDate = request.Date,
             };
             _context.Submissions.Add(submission);
             _context.SaveChanges();

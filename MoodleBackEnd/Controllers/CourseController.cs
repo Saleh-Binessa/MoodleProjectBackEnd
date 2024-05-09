@@ -4,6 +4,7 @@ using MoodleBackEnd.Models.Entites.Users;
 using MoodleBackEnd.Models.Entites;
 using MoodleBackEnd.Models.Requests;
 using MoodleBackEnd.Models.Responses;
+using Microsoft.EntityFrameworkCore;
 
 namespace MoodleBackEnd.Controllers
 {
@@ -26,7 +27,12 @@ namespace MoodleBackEnd.Controllers
                     Id = e.Id,
                     Name = e.Name,
                     Description = e.Description,
-                  //  Phases = e.Phases,
+                    Phases = e.Phases.Select(vv=> new PhaseResponse
+                    {
+                       Description = vv.Description,
+                       Name = vv.Name,
+                       Id = vv.Id,
+                    }).ToList(),
                   //  Students = e.Students,
                 }).ToList();
                 return Ok(courses);
@@ -36,18 +42,23 @@ namespace MoodleBackEnd.Controllers
             //[Authorize]
             public ActionResult<CourseResponse> GetCourseDetails(int id)
             {
-                var course = _context.Courses.Find(id);
+                var course = _context.Courses.Include(v=> v.Phases).SingleOrDefault(r=> r.Id == id);
                 if (course == null)
                 {
                     return NotFound();
                 }
-                var response = new CourseEntity
+                var response = new CourseResponse
                 {
                     Id = course.Id = id,
                     Name = course.Name,
                     Description = course.Description,
-                   // Phases = course.Phases,
-                   // Students = course.Students,
+                    Phases = course.Phases.Select(vv => new PhaseResponse
+                    {
+                        Description = vv.Description,
+                        Name = vv.Name,
+                        Id = vv.Id,
+                        CourseId = course.Id,
+                    }).ToList(),
                 };
             return Ok(response);
 

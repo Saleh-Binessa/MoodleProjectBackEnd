@@ -18,7 +18,7 @@ namespace MoodleBackEnd.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Admin,Instructor,Student")]
+       // [Authorize(Roles = "Admin,Instructor,Student")]
         [HttpGet]
         public ActionResult<List<TaskResponse>> GetAllTasks()
         {
@@ -51,7 +51,7 @@ namespace MoodleBackEnd.Controllers
             return Ok(response);
         }
         [HttpPost]
-        [Authorize(Roles = "Admin,Instructor")]
+       // [Authorize(Roles = "Admin,Instructor")]
         public IActionResult AddTask(TaskRequest request)
         {
             var task = new TaskEntity()
@@ -59,7 +59,8 @@ namespace MoodleBackEnd.Controllers
 
                 Name = request.Name,
                 Description = request.Description,
-                DeadLine = request.DeadLine,
+                MaterialId = request.MaterialId,
+                
             };
             _context.Tasks.Add(task);
             _context.SaveChanges();

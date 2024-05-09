@@ -17,7 +17,7 @@ namespace MoodleBackEnd.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Admin,Instructor,Student")]
+       // [Authorize(Roles = "Admin,Instructor,Student")]
         [HttpGet]
         public ActionResult<List<MaterialResponse>> GetAllMaterials()
         {

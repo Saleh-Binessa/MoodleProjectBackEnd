@@ -9,7 +9,5 @@ namespace MoodleBackEnd.Models.Responses
         public string Description { get; set; }
         public DateOnly Date { get; set; }
      //   public List<TaskEntity> Tasks { get; set; }
-
-        public MaterialResponse() { }
     }
 }
